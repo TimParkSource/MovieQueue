@@ -22,6 +22,32 @@
     (< (priority m1)(priority m2))
  ))
 
+;(printMovie m )    //prints the movie m
+; not the right output ----------------------------------------------------------------------------------!
+(define printMovie
+  (lambda(m)
+    (println(cons(name m) (priority m)))
+ ))
+; (printQueue  qlst )   // prints the movie queue qlst using printMovie.
+; works but has an error --------------------------------------------------------------------------------!
+(define printQueue
+  (lambda (qlst)
+    (if (null? qlst)
+        '()
+        ((printMovie(car(sort qlst compare))) (printQueue(cdr qlst)))
+ )))
+; ( memberMQ?   s  qlst)  // Checks if s is the name of a movie   in the movie queue qlst.
+; it's wrong --------------------------------------------------------------------------------------------!
+(define memberMQ?
+  (lambda (s qlst)
+    (cond
+      ((null? qlst) #f)
+      ( (equal? s name(car qlst)) #t)
+      (else (memberMQ? s (cdr qlst)))
+ )))
+; (getPriority  s  qlst)  returns the priority of the movie named s  in  qlst.
+;(define getPriority
+
 
 ;(define test1
 ;  (lambda ()
