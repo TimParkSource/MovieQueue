@@ -6,29 +6,29 @@
 (define t '( "Moonlight" 3))
 (define mqueue '())
 
-;(name  m) // returns the name of the movie m
+;a. (name  m) // returns the name of the movie m
 (define name
   (lambda (m)
     (car m)
  ))
-;(priority  m) // returns the priority of the movie m
+;b. (priority  m) // returns the priority of the movie m
 (define priority
   (lambda (m)
     (car (cdr m))
  ))
-; (compare m1 m2)  returns #t if movie m1  has a lower priority than movie m2. Otherwise return #f.
+;c. (compare m1 m2)  returns #t if movie m1  has a lower priority than movie m2. Otherwise return #f.
 (define compare
   (lambda (m1 m2)
     (< (priority m1)(priority m2))
  ))
-
-;(printMovie m )    //prints the movie m
+;d. (sort qlst  compare ) works
+;e. (printMovie m )    //prints the movie m
 ; not the right output ----------------------------------------------------------------------------------!
 (define printMovie
   (lambda(m)
     (println(cons(name m) (priority m)))
  ))
-; (printQueue  qlst )   // prints the movie queue qlst using printMovie.
+;f. (printQueue  qlst )   // prints the movie queue qlst using printMovie.
 ; works but has an error --------------------------------------------------------------------------------!
 (define printQueue
   (lambda (qlst)
@@ -36,17 +36,27 @@
         '()
         ((printMovie(car(sort qlst compare))) (printQueue(cdr qlst)))
  )))
-; ( memberMQ?   s  qlst)  // Checks if s is the name of a movie   in the movie queue qlst.
-; it's wrong --------------------------------------------------------------------------------------------!
+;g. ( memberMQ?   s  qlst)  // Checks if s is the name of a movie   in the movie queue qlst.
 (define memberMQ?
   (lambda (s qlst)
     (cond
       ((null? qlst) #f)
-      ( (equal? s name(car qlst)) #t)
+      ( (equal? s (name(car qlst))) #t)
       (else (memberMQ? s (cdr qlst)))
  )))
-; (getPriority  s  qlst)  returns the priority of the movie named s  in  qlst.
-;(define getPriority
+;h. (getPriority  s  qlst)  returns the priority of the movie named s  in  qlst.
+; priority(car(car qlst)) returning name ----------------------------------------------------------------!
+(define getPriority
+  (lambda (s qlst)
+    (cond
+      ((null? qlst) #f)
+      ( (equal? s (name(car qlst))) priority(car(car qlst)))
+      (else (getPriority s (cdr qlst)))
+ )))
+;i. (getName  k  qlst)  returns the name of the  movie in qlst with priority k.
+(define getName
+  (lambda (k qlst)
+    (if (length qlst
 
 
 ;(define test1
