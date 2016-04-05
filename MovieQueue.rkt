@@ -6,22 +6,78 @@
 (define t '( "Moonlight" 3))
 (define mqueue '())
 
-;(name  m) // returns the name of the movie m
+;a. (name  m) // returns the name of the movie m
 (define name
   (lambda (m)
     (car m)
  ))
-;(priority  m) // returns the priority of the movie m
+
+;b. (priority  m) // returns the priority of the movie m
 (define priority
   (lambda (m)
     (car (cdr m))
  ))
-; (compare m1 m2)  returns #t if movie m1  has a lower priority than movie m2. Otherwise return #f.
+
+;c. (compare m1 m2)  returns #t if movie m1  has a lower priority than movie m2. Otherwise return #f.
 (define compare
   (lambda (m1 m2)
     (< (priority m1)(priority m2))
  ))
 
+;d. (sort qlst  compare ) works
+
+;e. (printMovie m )    //prints the movie m 
+(define printMovie
+  (lambda(m)
+    (display (name m)) (display #\:) (display (priority m))
+ ))
+
+;f. (printQueue  qlst )   // prints the movie queue qlst using printMovie.
+; works but has an error --------------------------------------------------------------------------------!
+(define printQueue
+  (lambda (qlst)
+    (if (> 0 (length qlst))
+        '()
+        ( (newline) (printMovie (car (sort qlst compare) ) ) (printQueue (cdr (sort qlst compare))) )
+ )))
+
+;g. ( memberMQ?   s  qlst)  // Checks if s is the name of a movie   in the movie queue qlst.
+(define memberMQ?
+  (lambda (s qlst)
+    (cond
+      ((null? qlst) #f)
+      ( (equal? s (name(car qlst))) #t)
+      (else (memberMQ? s (cdr qlst)))
+ )))
+    
+;h. (getPriority  s  qlst)  returns the priority of the movie named s  in  qlst.
+(define getPriority
+  (lambda (s qlst)
+    (cond
+      ((null? qlst) #f)
+      ( (equal? s (name(car qlst)) ) car(car(cdr(car qlst))))
+      (else (getPriority s (cdr qlst)))
+ )))
+
+;i. (getName  k  qlst)  returns the name of the  movie in qlst with priority k.
+(define getName
+  (lambda (k qlst)
+    (cond
+      ((null? qlst) #f)
+      ( (equal? k (priority(car qlst)) ) car(car(car qlst)))
+      (else (getName k (cdr qlst)))
+ )))
+
+;j. (removeByPriority  k qlst  )  // removes the movie with priority k and updates the priorities of the movies on the list to reflect that the kth priority movie has been removed.
+(define removeByPriority
+  (lambda (k qlst)
+    (
+
+;k. (removeByName  s  qlst  )
+;l. (addMQ  s qlst)  
+;m. (insertMQ  s k qlst)
+;n. (updatePriority s  k  qlst)
+;o. (validMQ?  z)  
 
 ;(define test1
 ;  (lambda ()
