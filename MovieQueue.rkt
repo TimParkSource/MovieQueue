@@ -24,7 +24,11 @@
     (< (priority m1)(priority m2))
  ))
 
-;d. (sort qlst  compare ) works
+;d. (sort qlst  compare ) works Created a Helper function to call it
+(define sortedList
+  (lambda (qlst)
+    (sort qlst compare)
+    ))
 
 ;e. (printMovie m )    //prints the movie m 
 (define printMovie
@@ -39,6 +43,10 @@
     (if (> 0 (length qlst))
         '()
         ( (newline) (printMovie (car (sort qlst compare) ) ) (printQueue (cdr (sort qlst compare))) )
+    ;(cond
+     ; ((null? qlst) #f)
+     ; (= 1 (length qlst)  (newline) (printMovie (car (sort qlst compare) ) ))
+    ;  (else (newline) (printMovie (car (sort qlst compare) ) ) (printQueue (cdr (sort qlst compare))) )
  )))
 
 ;g. ( memberMQ?   s  qlst)  // Checks if s is the name of a movie   in the movie queue qlst.
@@ -68,16 +76,100 @@
       (else (getName k (cdr qlst)))
  )))
 
-;j. (removeByPriority  k qlst  )  // removes the movie with priority k and updates the priorities of the movies on the list to reflect that the kth priority movie has been removed.
+;Helper function to update the priority. Function recieves lst and x is 1 to start. List is updated and reassembled
+(define updateLst
+  (lambda (qlst x)
+    (cond
+      ((empty? qlst) '())
+      ((= 1 (length qlst)) (list(reverse(cons x (cdr (reverse(car (sortedList qlst))))))))     ;
+      (else (cons (reverse(cons x (cdr (reverse(car (sortedList qlst)))))) (updateLst (cdr(sortedList qlst)) (+ 1 x) )))
+ )))
+;helper function to order j and k
+(define delete
+  (lambda (k lst)
+    (map (lambda (x)
+      (cons (name x) (list
+        (if (>= (priority x) k)
+          (- (priority x) 1)
+          (priority x)
+           )))) lst)
+    )
+  )
+
+;j. (removeByPriority  k qlst  )  
+; needs to be ordered --------------------------------------------------------------------------------!
 (define removeByPriority
   (lambda (k qlst)
-    (
+    (cond
+      ((empty? qlst) '())
+      ((equal? k (priority( car (sortedList qlst)))) (cdr (sortedList qlst)))
+      (else (cons(car(sortedList qlst)) (removeByPriority k (cdr(sortedList qlst))))))
+      (updateLst qlst 1)
+      
+ ))
 
 ;k. (removeByName  s  qlst  )
-;l. (addMQ  s qlst)  
+; needs to be ordered --------------------------------------------------------------------------------!
+(define removeByName
+  (lambda (s qlst)
+    (cond
+      ((empty? qlst) '())
+      ((equal? s (name( car (sortedList qlst)))) (cdr (sortedList qlst)))
+      (else (cons (car (sortedList qlst)) (removeByName s (cdr (sortedList qlst)))))
+ )))
+
+;l. (addMQ  s qlst)
+(define addMQ
+  (lambda (s qlst)
+    (reverse(cons(cons s( cons (+ 1 (length qlst)) '())) (reverse(sortedList qlst))))
+    ))
+
+
+;helper function used by insertMQ
+(define insert
+  (lambda (k lst)
+    (map (lambda (x)
+         (cons (name x) (list
+           (if (>= (priority x) k)
+               (+ (priority x) 1)
+               (priority x)))))
+    lst)
+ ))
 ;m. (insertMQ  s k qlst)
+(define insertMQ
+  (lambda (s k qlst)
+    (sort (cons(cons s (list k))(insert k qlst))compare)
+ ))
+
 ;n. (updatePriority s  k  qlst)
-;o. (validMQ?  z)  
+(define updatePriority
+  (lambda (s k qlst)
+    (if (memberMQ? s qlst)
+        (if (<= k (length qlst))
+            (insertMQ s k (removeByName s qlst))
+            (ssortedList qlst)
+            )
+        (sortedList qlst)
+ )))
+
+;o. (validMQ?  z)
+(define validMQ?
+  (lambda (z)
+    (if(null? z) #t
+       (andmap (lambda (x)
+         (if (pair? x)
+           (if (string? (car x))
+             (if (number? (car (cdr x)))
+               #t 
+               #f
+              )
+           #f
+           )
+         #f
+         )
+         )
+         z)
+ )))
 
 ;(define test1
 ;  (lambda ()
