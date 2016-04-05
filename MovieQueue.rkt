@@ -93,7 +93,7 @@
       ((empty? qlst) '())
       ((equal? k (priority( car (sortedList qlst)))) (cdr (sortedList qlst)))
       (else (cons(car(sortedList qlst)) (removeByPriority k (cdr(sortedList qlst))))))
-      (updateLst qlst)
+      (updateLst qlst 1)
       
  ))
 
@@ -106,7 +106,10 @@
       (else (cons (car (sortedList qlst)) (removeByName s (cdr (sortedList qlst)))))
  )))
 
-;l. (addMQ  s qlst)  
+;l. (addMQ  s qlst)
+;(define addMQ
+;  (lambda (s qlst)
+ ;   (
 ;m. (insertMQ  s k qlst)
 ;n. (updatePriority s  k  qlst)
 ;o. (validMQ?  z)  
